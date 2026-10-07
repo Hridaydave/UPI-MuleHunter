@@ -65,3 +65,55 @@ The system combines:
                                v
                       Decision / Review
                     ALLOW / REVIEW / HOLD
+
+---
+
+## 📚 Documentation
+
+Detailed project documentation:
+
+- [System Architecture](docs/architecture.md)
+- [Research Methodology](docs/methodology.md)
+- [Dataset Documentation](docs/datasets.md)
+- [API Documentation](docs/api.md)
+- [Evaluation Protocol](docs/evaluation.md)
+
+---
+
+## 🖥️ Interactive Dashboard
+
+The project includes an interactive research dashboard for exploring:
+
+- Temporal transaction behaviour
+- Graph intelligence
+- Risk fusion
+- Ring detection
+- Explainability
+- Research/demo risk scoring
+
+![MuleHunter Dashboard](screenshots/dashboard.png)
+
+> Dashboard risk values are intended for research/demo exploration and should
+> not be interpreted as production UPI fraud decisions.
+
+---
+
+## 🔌 API
+
+The backend exposes a FastAPI interface.
+
+Main endpoints include:
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/health` | Health check |
+| `POST` | `/api/score` | Risk-signal fusion |
+| `POST` | `/api/rings` | Graph-ring detection |
+| `POST` | `/api/results/import` | Import research results |
+| `GET` | `/api/results/{name}` | Retrieve stored results |
+
+Interactive API documentation is available through FastAPI when the server
+is running:
+
+```text
+http://localhost:8000/docs
