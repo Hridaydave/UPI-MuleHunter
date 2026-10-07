@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MuleHunter-SAML Control Tower</title>
+<style>
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#0b1020;color:#e8ecf5}
+header{padding:22px 30px;border-bottom:1px solid #202a43;display:flex;justify-content:space-between}
+h1{margin:0;font-size:22px}.sub{color:#8f9ab5;font-size:13px;margin-top:5px}
+main{padding:24px;max-width:1250px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:#11182b;border:1px solid #202a43;border-radius:12px;padding:18px}
+.label{font-size:12px;color:#8f9ab5}.value{font-size:28px;margin-top:8px}
+.section{margin-top:22px}.panel{background:#11182b;border:1px solid #202a43;border-radius:12px;padding:18px}
+button{background:#2563eb;color:white;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}
+input{background:#0b1020;color:#fff;border:1px solid #2a3552;border-radius:7px;padding:9px}
+pre{white-space:pre-wrap;color:#aeb9d3}
+table{width:100%;border-collapse:collapse}td,th{padding:10px;border-bottom:1px solid #202a43;text-align:left}
+.badge{padding:5px 9px;border-radius:12px;background:#273451}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<div><h1>MuleHunter-SAML</h1><div class="sub">Temporal Transaction-Graph Mule Detection Control Tower</div></div>
+<div><span class="badge">v14 Prototype</span></div>
+</header>
+<main>
+<div class="grid">
+<div class="card"><div class="label">Architecture</div><div class="value">Hybrid</div></div>
+<div class="card"><div class="label">Graph Intelligence</div><div class="value">ON</div></div>
+<div class="card"><div class="label">Explainability</div><div class="value">ON</div></div>
+<div class="card"><div class="label">Temporal Engine</div><div class="value">ON</div></div>
+</div>
+
+<div class="section panel">
+<h2>Risk Fusion Simulator</h2>
+<p class="sub">Research/demo scoring only. Final paper scores come from the controlled SAML-D experiment.</p>
+<div class="grid">
+<label>Markov <input id="markov" type="number" min="0" max="1" step=".01" value=".7"></label>
+<label>RF <input id="rf" type="number" min="0" max="1" step=".01" value=".8"></label>
+<label>Graph <input id="graph" type="number" min="0" max="1" step=".01" value=".6"></label>
+<label>Ring <input id="ring" type="number" min="0" max="1" step=".01" value=".5"></label>
+</div>
+<br><button onclick="score()">Calculate risk</button>
+<pre id="scoreOut"></pre>
+</div>
+
+<div class="section panel">
+<h2>Graph Ring Detector</h2>
+<p class="sub">Paste JSON edges: [{"sender":"A","receiver":"B","amount":100}]</p>
+<textarea id="edges" rows="6" style="width:100%;background:#0b1020;color:white;border:1px solid #2a3552;border-radius:8px;padding:10px">[{"sender":"A","receiver":"B","amount":100},{"sender":"B","receiver":"C","amount":80},{"sender":"C","receiver":"A","amount":75},{"sender":"D","receiver":"A","amount":50},{"sender":"E","receiver":"A","amount":50},{"sender":"F","receiver":"A","amount":50},{"sender":"G","receiver":"A","amount":50},{"sender":"H","receiver":"A","amount":50},{"sender":"I","receiver":"A","amount":50},{"sender":"J","receiver":"A","amount":50},{"sender":"K","receiver":"A","amount":50}]</textarea>
+<br><br><button onclick="rings()">Detect structures</button>
+<pre id="ringOut"></pre>
+</div>
+
+<div class="section panel">
+<h2>Research Position</h2>
+<table>
+<tr><th>Layer</th><th>Role</th></tr>
+<tr><td>Markov</td><td>Temporal transition behaviour</td></tr>
+<tr><td>Random Forest</td><td>Strong tabular baseline</td></tr>
+<tr><td>GraphSAGE</td><td>Account-neighborhood representation</td></tr>
+<tr><td>Ring Intelligence</td><td>Structural mule patterns</td></tr>
+<tr><td>Risk Fusion</td><td>Transparent multi-signal decision layer</td></tr>
+<tr><td>Explainability</td><td>Reason codes / future SHAP integration</td></tr>
+</table>
+</div>
+</main>
+<script>
+async function score(){
+ const body={
+   markov:+document.getElementById('markov').value,
+   rf:+document.getElementById('rf').value,
+   graph:+document.getElementById('graph').value,
+   ring:+document.getElementById('ring').value,
+   anomaly:0,
+   features:{receiver_counterparties:10}
+ };
+ const r=await fetch('/api/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ document.getElementById('scoreOut').textContent=JSON.stringify(await r.json(),null,2);
+}
+async function rings(){
+ const edges=JSON.parse(document.getElementById('edges').value);
+ const r=await fetch('/api/rings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({edges})});
+ document.getElementById('ringOut').textContent=JSON.stringify(await r.json(),null,2);
+}
+</script>
+</body>
+</html>
